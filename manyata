@@ -1,0 +1,6 @@
+elif instr in ["beq", "bne"]:  # B-type (branch)
+        rs1, rs2 = registers[parts[1]], registers[parts[2]]
+        offset = (labels[parts[3]] - line_num) * 4 if parts[3] in labels else int(parts[3])
+        imm = to_signed_bin(offset, 13)
+        opcode, func3 = opcode_map[instr]
+        return f"{imm[0]}{imm[2:8]}{rs2}{rs1}{func3}{imm[8:12]}{imm[1]}{opcode}"
