@@ -1,0 +1,13 @@
+elif instr in instruction_formats['I']:  # I-type (addi, lw, jalr)
+        rd = registers[parts[1]]
+        if instr == "lw":  # lw a4, 30(s3) -> rd = a4, rs1 = s3, imm = 30
+            imm, reg = parts[2].split('(')
+            rs1 = registers[reg[:-1]]  # Remove closing parenthesis
+            imm = int(imm)
+        else:
+            rs1 = registers[parts[2]]
+            imm = int(parts[3])
+
+        opcode, funct3 = instruction_formats['I'][instr]
+        imm_bin = format(imm & 0xFFF, '012b')  # Sign extend
+        binary = f"{imm_bin}{rs1}{funct3}{rd}{opcode}
