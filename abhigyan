@@ -1,0 +1,17 @@
+elif instr in instruction_formats['S']:  # S-type (sw)
+        rs2 = registers[parts[1]]
+        imm, reg = parts[2].split('(')
+        rs1 = registers[reg[:-1]]  # Extract base register
+        imm = int(imm)
+        opcode, funct3 = instruction_formats['S'][instr]
+        imm_bin = format(imm & 0xFFF, '012b')  # Sign extend
+        imm_high, imm_low = imm_bin[:7], imm_bin[7:]
+        binary = f"{imm_high}{rs2}{rs1}{funct3}{imm_low}{opcode}"
+
+elif instr in instruction_formats['J']:  # J-type (jal)
+        rd = registers[parts[1]]
+        offset = labels[parts[2]] - pc if parts[2] in labels else int(parts[2])
+        opcode, _ = instruction_formats['J'][instr]
+        imm_bin = format(offset & 0xFFFFF, '021b')  # Sign extend
+        imm = imm_bin[0] + imm_bin[10:20] + imm_bin[9] + imm_bin[1:9]
+        binary = f"{imm}{rd}{opcode}"
